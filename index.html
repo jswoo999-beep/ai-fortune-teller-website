@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>玄鉴阁 · AI命理占卜</title>
+  <meta name="description" content="玄鉴阁：沉浸式东方命理占卜体验，诚心问事，一念呈象。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-1: #0a0a0f;
+      --bg-2: #120d20;
+      --bg-3: #1a0a2e;
+      --gold: #d4af37;
+      --gold-soft: rgba(212, 175, 55, 0.28);
+      --gold-strong: #f5d87a;
+      --crimson: #8b0000;
+      --crimson-soft: rgba(139, 0, 0, 0.25);
+      --text: rgba(255, 248, 228, 0.92);
+      --muted: rgba(255, 240, 210, 0.64);
+      --panel: rgba(17, 12, 25, 0.74);
+      --panel-strong: rgba(25, 16, 35, 0.92);
+      --line: rgba(212, 175, 55, 0.18);
+      --shadow: 0 20px 80px rgba(0, 0, 0, 0.45);
+      --radius: 24px;
+      --max-width: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: "Noto Serif SC", serif;
+      background:
+        radial-gradient(circle at top, rgba(212,175,55,0.08), transparent 22%),
+        radial-gradient(circle at 20% 20%, rgba(139,0,0,0.10), transparent 20%),
+        linear-gradient(160deg, var(--bg-1), var(--bg-2) 45%, var(--bg-3));
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(212,175,55,0.08), transparent 36%),
+        radial-gradient(circle at 80% 30%, rgba(255,255,255,0.04), transparent 14%),
+        radial-gradient(circle at 10% 80%, rgba(139,0,0,0.12), transparent 18%);
+      z-index: -2;
+    }
+
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: rgba(0,0,0,0.35); }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(var(--gold), #7b5a17);
+      border-radius: 999px;
+    }
+
+    #particles {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.72;
+    }
+
+    .shell {
+      width: min(100%, var(--max-width));
+      margin: 0 auto;
+      padding: 24px 18px 80px;
+      position: relative;
+    }
+
+    .top-mark {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      letter-spacing: 0.28em;
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      margin: 10px 0 22px;
+    }
+
+    .top-mark::before, .top-mark::after {
+      content: "";
+      width: 48px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .panel {
+      background: linear-gradient(180deg, rgba(27, 18, 38, 0.88), rgba(13, 10, 20, 0.78));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 26px;
+      padding: 26px;
+    }
+
+    .hero-copy {
+      padding: 28px;
+      position: relative;
+    }
+
+    .calligraphy {
+      font-family: "Ma Shan Zheng", cursive;
+      font-size: clamp(2.8rem, 8vw, 5.6rem);
+      line-height: 1.05;
+      color: #f9e6aa;
+      text-shadow: 0 0 18px rgba(212,175,55,0.24), 0 0 48px rgba(139,0,0,0.18);
+      margin: 8px 0 10px;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--muted);
+      line-height: 1.9;
+      max-width: 46ch;
+    }
+
+    .ritual-note {
+      margin-top: 18px;
+      padding: 16px 18px;
+      border-left: 2px solid var(--gold);
+      background: rgba(255,255,255,0.03);
+      color: rgba(255,244,220,0.78);
+      line-height: 1.8;
+    }
+
+    .hero-art {
+      position: relative;
+      min-height: 520px;
+      display: grid;
+      place-items: center;
+      isolation: isolate;
+    }
+
+    .oracle-ring, .oracle-ring::before, .oracle-ring::after {
+      border-radius: 50%;
+      position: absolute;
+      border: 1px solid rgba(212,175,55,0.18);
+    }
+
+    .oracle-ring {
+      width: 340px;
+      height: 340px;
+      box-shadow: 0 0 55px rgba(212,175,55,0.14), inset 0 0 45px rgba(139,0,0,0.14);
+      animation: slowRotate 24s linear infinite;
+    }
+
+    .oracle-ring::before {
+      content: "☯";
+      inset: 24px;
+      display: grid;
+      place-items: center;
+      font-size: 6.2rem;
+      color: rgba(244, 223, 159, 0.92);
+      border-color: rgba(212,175,55,0.3);
+      animation: reverseRotate 20s linear infinite;
+    }
+
+    .oracle-ring::after {
+      content: "乾 坤 震 巽 坎 离 艮 兑";
+      inset: -26px;
+      display: grid;
+      place-items: center;
+      color: rgba(255,230,180,0.38);
+      font-size: 1rem;
+      letter-spacing: 0.55em;
+      text-indent: 0.55em;
+      border-color: rgba(212,175,55,0.14);
+      animation: pulseGlow 5s ease-in-out infinite;
+    }
+
+    .mist {
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      background: radial-gradient(circle, rgba(212,175,55,0.12), transparent 58%);
+      filter: blur(18px);
+      animation: floatMist 7s ease-in-out infinite;
+      z-index: -1;
+    }
+
+    .entry-form {
+      padding: 24px;
+      display: grid;
+      gap: 18px;
+      align-self: center;
+    }
+
+    .section-title {
+      font-size: 0.95rem;
+      color: var(--gold-strong);
+      letter-spacing: 0.12em;
+      margin: 0 0 10px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .field input, .field select {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(212,175,55,0.18);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      font: inherit;
+      outline: none;
+      transition: 0.25s ease;
+    }
+
+    .field input:focus, .field select:focus {
+      border-color: rgba(212,175,55,0.55);
+      box-shadow: 0 0 0 4px rgba(212,175,55,0.12);
+    }
+
+    .zodiac-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .zodiac-card {
+      border: 1px solid rgba(212,175,55,0.16);
+      background: rgba(255,255,255,0.03);
+      border-radius: 18px;
+      padding: 12px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+      user-select: none;
+    }
+
+    .zodiac-card:hover, .zodiac-card.active {
+      transform: translateY(-3px) scale(1.02);
+      border-color: rgba(212,175,55,0.58);
+      background: linear-gradient(180deg, rgba(212,175,55,0.12), rgba(139,0,0,0.12));
+      box-shadow: 0 0 18px rgba(212,175,55,0.12);
+    }
+
+    .zodiac-icon {
+      font-size: 1.55rem;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .question-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .pill {
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(212,175,55,0.16);
+      color: var(--muted);
+      cursor: pointer;
+      background: rgba(255,255,255,0.03);
+      transition: all 0.25s ease;
+    }
+
+    .pill.active {
+      color: #1b1207;
+      background: linear-gradient(135deg, #f4d77e, var(--gold));
+      border-color: transparent;
+      box-shadow: 0 10px 28px rgba(212,175,55,0.28);
+    }
+
+    .primary-btn, .secondary-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 14px 24px;
+      font: inherit;
+      cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+    }
+
+    .primary-btn {
+      color: #1a1208;
+      background: linear-gradient(135deg, #f8dd8d, var(--gold));
+      box-shadow: 0 12px 34px rgba(212,175,55,0.28);
+      animation: breathing 2.8s ease-in-out infinite;
+    }
+
+    .secondary-btn {
+      color: var(--text);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(212,175,55,0.18);
+    }
+
+    .primary-btn:hover, .secondary-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .hidden { display: none !important; }
+
+    .flow-section {
+      margin-top: 32px;
+      padding: 28px;
+    }
+
+    .process {
+      text-align: center;
+      padding: 44px 20px;
+      min-height: 420px;
+      display: grid;
+      place-items: center;
+    }
+
+    .process-visual {
+      position: relative;
+      width: 240px;
+      height: 240px;
+      margin: 0 auto 22px;
+      display: grid;
+      place-items: center;
+    }
+
+    .breath-circle {
+      width: 124px;
+      height: 124px;
+      border-radius: 50%;
+      border: 1px solid rgba(212,175,55,0.48);
+      box-shadow: 0 0 26px rgba(212,175,55,0.16), inset 0 0 22px rgba(139,0,0,0.14);
+      animation: inhaleExhale 1.6s ease-in-out infinite;
+    }
+
+    .hexagram-spinner {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      border: 1px dashed rgba(212,175,55,0.4);
+      position: absolute;
+      animation: slowRotate 8s linear infinite;
+    }
+
+    .hexagram-spinner::before, .hexagram-spinner::after {
+      content: "☰ ☷ ☵ ☲ ☳ ☴ ☶ ☱";
+      position: absolute;
+      inset: -34px;
+      display: grid;
+      place-items: center;
+      color: rgba(255,231,178,0.58);
+      letter-spacing: 0.42em;
+      text-indent: 0.42em;
+      font-size: 1.2rem;
+    }
+
+    .yin-yang {
+      font-size: 4.8rem;
+      color: #f4dfa4;
+      animation: slowRotate 2.4s linear infinite;
+      text-shadow: 0 0 18px rgba(212,175,55,0.24);
+    }
+
+    .step-label {
+      font-family: "Ma Shan Zheng", cursive;
+      font-size: clamp(2rem, 5vw, 3rem);
+      color: #f6df98;
+      margin-bottom: 10px;
+    }
+
+    .step-copy {
+      max-width: 34ch;
+      margin: 0 auto;
+      color: var(--muted);
+      line-height: 1.9;
+    }
+
+    .status-dots {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .status-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(212,175,55,0.18);
+      transition: all 0.25s ease;
+    }
+
+    .status-dots span.active {
+      background: var(--gold);
+      box-shadow: 0 0 16px rgba(212,175,55,0.55);
+      transform: scale(1.18);
+    }
+
+    .results {
+      display: grid;
+      gap: 22px;
+    }
+
+    .preview-card {
+      padding: 28px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .preview-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(212,175,55,0.12), transparent 28%), radial-gradient(circle at bottom left, rgba(139,0,0,0.18), transparent 32%);
+      pointer-events: none;
+    }
+
+    .preview-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .oracle-badge {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .oracle-animal {
+      width: 84px;
+      height: 84px;
+      border-radius: 24px;
+      display: grid;
+      place-items: center;
+      font-size: 2.4rem;
+      background: linear-gradient(145deg, rgba(212,175,55,0.16), rgba(139,0,0,0.18));
+      border: 1px solid rgba(212,175,55,0.26);
+      box-shadow: 0 0 24px rgba(212,175,55,0.14);
+      animation: shimmer 3.2s linear infinite;
+    }
+
+    .category-title {
+      font-family: "Ma Shan Zheng", cursive;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      color: #f5df9c;
+      margin: 4px 0 0;
+    }
+
+    .ink-reveal {
+      position: relative;
+      overflow: hidden;
+      animation: inkReveal 1.4s ease both;
+    }
+
+    .insight {
+      font-size: 1.04rem;
+      line-height: 2;
+      color: rgba(255,247,227,0.92);
+      margin: 0;
+      white-space: pre-wrap;
+    }
+
+    .countdown-banner {
+      margin-top: 20px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(139,0,0,0.28), rgba(212,175,55,0.12));
+      border: 1px solid rgba(212,175,55,0.18);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .timer {
+      font-size: 1.35rem;
+      color: #ffe7a7;
+      letter-spacing: 0.06em;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .payment-card, .full-reading, .fortune-card-wrap {
+      padding: 24px;
+    }
+
+    .payment-grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .qr-box {
+      aspect-ratio: 1;
+      width: 100%;
+      max-width: 260px;
+      border-radius: 24px;
+      background: #fff;
+      padding: 16px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+      display: grid;
+      place-items: center;
+      margin: 0 auto;
+    }
+
+    .qr-box canvas { width: 100%; height: 100%; }
+
+    .pay-copy {
+      color: var(--muted);
+      line-height: 1.9;
+    }
+
+    .guarantee {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(212,175,55,0.14);
+      color: rgba(255,244,220,0.76);
+    }
+
+    .full-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .dimension {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(212,175,55,0.12);
+    }
+
+    .dimension h4 {
+      margin: 0 0 8px;
+      font-size: 1.08rem;
+      color: #f6dfa1;
+    }
+
+    .stars { color: #f5d570; letter-spacing: 0.18em; margin-bottom: 8px; }
+    .dimension p { margin: 0 0 10px; line-height: 1.9; color: rgba(255,246,225,0.88); white-space: pre-wrap; }
+    .advice { color: var(--muted); font-size: 0.96rem; }
+
+    .monthly, .lucky {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(212,175,55,0.12);
+    }
+
+    .lucky-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .lucky-item {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(212,175,55,0.14), rgba(139,0,0,0.18));
+      border: 1px solid rgba(212,175,55,0.18);
+    }
+
+    .fortune-card-wrap {
+      display: grid;
+      gap: 16px;
+    }
+
+    #fortuneCardCanvas {
+      width: 100%;
+      max-width: 520px;
+      border-radius: 24px;
+      background: #0f0c16;
+      border: 1px solid rgba(212,175,55,0.18);
+      justify-self: center;
+    }
+
+    .error-box {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 123, 123, 0.24);
+      background: rgba(139,0,0,0.18);
+      color: #ffd3d3;
+    }
+
+    .footer-note {
+      text-align: center;
+      color: rgba(255,240,210,0.42);
+      font-size: 0.88rem;
+      margin-top: 22px;
+    }
+
+    @keyframes slowRotate { from { transform: rotate(0deg);} to { transform: rotate(360deg);} }
+    @keyframes reverseRotate { from { transform: rotate(360deg);} to { transform: rotate(0deg);} }
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.55; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.03); }
+    }
+    @keyframes floatMist {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-16px) scale(1.05); }
+    }
+    @keyframes breathing {
+      0%, 100% { box-shadow: 0 12px 34px rgba(212,175,55,0.22); }
+      50% { box-shadow: 0 16px 44px rgba(212,175,55,0.38), 0 0 18px rgba(212,175,55,0.24); }
+    }
+    @keyframes inhaleExhale {
+      0%, 100% { transform: scale(0.92); opacity: 0.7; }
+      50% { transform: scale(1.08); opacity: 1; }
+    }
+    @keyframes shimmer {
+      0% { filter: brightness(0.96); box-shadow: 0 0 20px rgba(212,175,55,0.12); }
+      50% { filter: brightness(1.08); box-shadow: 0 0 34px rgba(212,175,55,0.22); }
+      100% { filter: brightness(0.96); box-shadow: 0 0 20px rgba(212,175,55,0.12); }
+    }
+    @keyframes inkReveal {
+      0% { opacity: 0; transform: translateY(24px) scale(0.985); clip-path: inset(0 0 100% 0); }
+      100% { opacity: 1; transform: translateY(0) scale(1); clip-path: inset(0 0 0 0); }
+    }
+
+    @media (max-width: 960px) {
+      .hero-inner, .payment-grid, .full-grid { grid-template-columns: 1fr; }
+      .hero-art { min-height: 320px; }
+      .oracle-ring { width: 260px; height: 260px; }
+      .oracle-ring::before { font-size: 4.6rem; }
+    }
+
+    @media (max-width: 640px) {
+      .shell { padding-inline: 12px; }
+      .hero-inner, .hero-copy, .entry-form, .flow-section, .preview-card, .payment-card, .full-reading, .fortune-card-wrap { padding: 18px; }
+      .zodiac-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .preview-header { align-items: flex-start; }
+      .process { min-height: 360px; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particles"></canvas>
+  <div class="shell">
+    <div class="top-mark">玄鉴阁 · AI Oracle</div>
+
+    <section class="hero panel" id="hero">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <div class="section-title">诚心问事 · 一念通玄</div>
+          <h1 class="calligraphy">玄鉴阁</h1>
+          <p class="subtitle">
+            夜色深处，心意最真。将姓名、生辰与所问之事轻轻托付，古意与算法交汇之处，便会映出你此刻最该看清的天机。
+          </p>
+          <div class="ritual-note">
+            先定心，再问事。你要的不是一句空话，而是一面照见当下、照亮来路的命理之镜。
+          </div>
+        </div>
+
+        <div class="panel entry-form">
+          <div>
+            <div class="section-title">入阁前 · 请先留名</div>
+            <div class="field">
+              <label for="nameInput">姓名</label>
+              <input id="nameInput" type="text" maxlength="16" placeholder="请写下你的名字" />
+            </div>
+          </div>
+
+          <div>
+            <label class="section-title">生肖</label>
+            <div class="zodiac-grid" id="zodiacGrid"></div>
+          </div>
+
+          <div class="field">
+            <label for="birthInput">生辰（可选，更利推演）</label>
+            <input id="birthInput" type="date" />
+          </div>
+
+          <div>
+            <label class="section-title">所问方向</label>
+            <div class="question-pills" id="questionPills"></div>
+          </div>
+
+          <button class="primary-btn" id="beginBtn">开始占卜</button>
+          <div id="entryError" class="error-box hidden"></div>
+        </div>
+      </div>
+
+      <div class="hero-art" aria-hidden="true">
+        <div class="mist"></div>
+        <div class="oracle-ring"></div>
+      </div>
+    </section>
+
+    <section class="flow-section panel hidden" id="processSection">
+      <div class="process">
+        <div>
+          <div class="process-visual" id="processVisual">
+            <div class="hexagram-spinner"></div>
+            <div class="breath-circle" id="processCore"></div>
+          </div>
+          <div class="step-label" id="stepLabel">净心</div>
+          <p class="step-copy" id="stepCopy">请将杂念缓缓放下，让心意归于一点。所问越真，所见越明。</p>
+          <div class="status-dots" id="statusDots">
+            <span class="active"></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="flow-section results hidden" id="resultsSection">
+      <div class="preview-card panel ink-reveal">
+        <div class="preview-header">
+          <div class="oracle-badge">
+            <div class="oracle-animal" id="resultAnimal">🐉</div>
+            <div>
+              <div class="section-title">天机初现</div>
+              <div class="category-title" id="categoryTitle">事业有象</div>
+            </div>
+          </div>
+          <div id="ritualMeta" class="section-title"></div>
+        </div>
+        <p class="insight" id="insightText"></p>
+        <div class="countdown-banner">
+          <div>
+            <strong>限时解锁完整解读</strong>
+            <div class="pay-copy">完整年度运势、月度关键节点、四象详批与吉祥物建议，仅在此刻灵感最清时最为准确。</div>
+          </div>
+          <div class="timer" id="countdownTimer">09:59</div>
+        </div>
+        <div class="cta-row">
+          <button class="primary-btn" id="unlockBtn">¥9.9 解锁完整年度运势</button>
+          <button class="secondary-btn" id="restartTopBtn">再次占卜</button>
+        </div>
+      </div>
+
+      <div class="payment-card panel hidden" id="paymentSection">
+        <div class="section-title">缘金已启 · 请完成灵签供奉</div>
+        <div class="payment-grid">
+          <div class="qr-box"><canvas id="qrCanvas" width="240" height="240"></canvas></div>
+          <div>
+            <p class="pay-copy">
+              请使用支付宝扫码支付 <strong>¥9.9</strong>。付款后，点击下方按钮，即可查看完整解读。当前为演示版本，支付确认采用模拟开关，但整体流程已可直接部署展示。
+            </p>
+            <div class="guarantee">
+              若你觉得这份解读毫无照见之处，那便当它是夜里的一盏灯，看过即散；若其中一句恰好点中你，那这九块九，也算替自己买了一次心安。
+            </div>
+            <div class="cta-row">
+              <button class="primary-btn" id="confirmPaymentBtn">我已付款，查看完整解读</button>
+              <button class="secondary-btn" id="togglePaymentBtn">切换模拟付款状态：未付款</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="full-reading panel hidden" id="fullReadingSection">
+        <div class="section-title">全卷展开 · 四象详批</div>
+        <div class="full-grid" id="fullGrid"></div>
+        <div class="monthly">
+          <h4>本月运势</h4>
+          <p id="monthlyForecast" class="insight"></p>
+        </div>
+        <div class="lucky">
+          <h4>吉祥物</h4>
+          <div class="lucky-list" id="luckyList"></div>
+        </div>
+        <div class="cta-row">
+          <button class="secondary-btn" id="redrawCardBtn">重绘分享卡</button>
+          <button class="primary-btn" id="downloadCardBtn">下载运势卡</button>
+          <button class="secondary-btn" id="restartBtn">再次占卜</button>
+        </div>
+      </div>
+
+      <div class="fortune-card-wrap panel hidden" id="fortuneCardSection">
+        <div class="section-title">分享运势卡</div>
+        <canvas id="fortuneCardCanvas" width="1080" height="1620"></canvas>
+      </div>
+
+      <div id="globalError" class="error-box hidden"></div>
+    </section>
+
+    <div class="footer-note">玄鉴阁为演示型 AI 命理产品页面。命理之言，宜作参照，不必尽信。</div>
+  </div>
+
+  <script>
+    const DEEPSEEK_API_KEY = 'sk-d0b8eb9c9355486e80eb9cc8ce0e195f';
+    const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
+    const STORAGE_KEY = 'oracle-fortune-state-v1';
+    const PAYMENT_WINDOW_HOURS = 24;
+
+    const zodiacs = [
+      { key: 'rat', name: '鼠', icon: '🐭' },
+      { key: 'ox', name: '牛', icon: '🐮' },
+      { key: 'tiger', name: '虎', icon: '🐯' },
+      { key: 'rabbit', name: '兔', icon: '🐰' },
+      { key: 'dragon', name: '龙', icon: '🐉' },
+      { key: 'snake', name: '蛇', icon: '🐍' },
+      { key: 'horse', name: '马', icon: '🐴' },
+      { key: 'goat', name: '羊', icon: '🐑' },
+      { key: 'monkey', name: '猴', icon: '🐵' },
+      { key: 'rooster', name: '鸡', icon: '🐔' },
+      { key: 'dog', name: '狗', icon: '🐶' },
+      { key: 'pig', name: '猪', icon: '🐷' }
+    ];
+
+    const questionCategories = [
+      { key: 'career', label: '事业' },
+      { key: 'love', label: '感情' },
+      { key: 'wealth', label: '财运' },
+      { key: 'health', label: '健康' }
+    ];
+
+    const categoryDisplay = {
+      career: '事业有象',
+      love: '情缘将动',
+      wealth: '财气流转',
+      health: '身心同调'
+    };
+
+    const fallbackCopy = {
+      insight: '你近来的运势并非大开大阖，而像夜行舟上渐渐清晰的岸灯。眼前那点迟疑，不是命途阻滞，而是旧念未散；一旦定下心来，真正属于你的机会会很快显形。',
+      full_reading: {
+        career: '事业之势，在稳中藏锋。眼下适合收束分散的精力，把最重要的那一件事做深做透，旁人起初未必看见你的价值，但一到关键节点，你反而会成为局中最不可替代的人。',
+        love: '情感之中，最怕心里有话却总留三分。你不是没有温度，而是习惯先自我确认，再肯交付真意。接下来若能多一点直白与柔软，缘分会比你预想中更快靠近。',
+        wealth: '财运并非一夜惊鸿，而是细流成川。你有积累财富的能力，只是过去容易因为情绪或一时兴起而分散资源。此后若能将钱花在真正增值的人和事上，后劲颇可观。',
+        health: '身心之象提示你：疲惫往往先落在精神，再映到身体。近日宜规律作息，少熬夜，多走动，让气血重新流起来。许多不适，不在病，而在耗。'
+      },
+      monthly_forecast: '本月上旬宜收心整顿，尤其在7日、11日前后，会有一次关于合作或关系的重新判断；中旬适合出手推进一件拖延已久的事；到了下旬，19日、24日前后易有小惊喜，可能来自旧人回音、工作回报，或一笔意外之财。',
+      lucky_items: ['赤金色', '数字 8', '龙纹挂件']
+    };
+
+    const state = {
+      selectedZodiac: null,
+      selectedQuestion: 'career',
+      paymentMocked: false,
+      fortune: null,
+      countdown: 600,
+      countdownTimerId: null,
+      currentUser: null
+    };
+
+    const el = {
+      zodiacGrid: document.getElementById('zodiacGrid'),
+      questionPills: document.getElementById('questionPills'),
+      nameInput: document.getElementById('nameInput'),
+      birthInput: document.getElementById('birthInput'),
+      beginBtn: document.getElementById('beginBtn'),
+      entryError: document.getElementById('entryError'),
+      processSection: document.getElementById('processSection'),
+      resultsSection: document.getElementById('resultsSection'),
+      processCore: document.getElementById('processCore'),
+      stepLabel: document.getElementById('stepLabel'),
+      stepCopy: document.getElementById('stepCopy'),
+      statusDots: [...document.querySelectorAll('#statusDots span')],
+      resultAnimal: document.getElementById('resultAnimal'),
+      categoryTitle: document.getElementById('categoryTitle'),
+      ritualMeta: document.getElementById('ritualMeta'),
+      insightText: document.getElementById('insightText'),
+      countdownTimer: document.getElementById('countdownTimer'),
+      unlockBtn: document.getElementById('unlockBtn'),
+      restartBtn: document.getElementById('restartBtn'),
+      restartTopBtn: document.getElementById('restartTopBtn'),
+      paymentSection: document.getElementById('paymentSection'),
+      confirmPaymentBtn: document.getElementById('confirmPaymentBtn'),
+      togglePaymentBtn: document.getElementById('togglePaymentBtn'),
+      fullReadingSection: document.getElementById('fullReadingSection'),
+      fullGrid: document.getElementById('fullGrid'),
+      monthlyForecast: document.getElementById('monthlyForecast'),
+      luckyList: document.getElementById('luckyList'),
+      fortuneCardSection: document.getElementById('fortuneCardSection'),
+      redrawCardBtn: document.getElementById('redrawCardBtn'),
+      downloadCardBtn: document.getElementById('downloadCardBtn'),
+      globalError: document.getElementById('globalError'),
+      qrCanvas: document.getElementById('qrCanvas'),
+      fortuneCardCanvas: document.getElementById('fortuneCardCanvas')
+    };
+
+    function init() {
+      renderZodiacs();
+      renderQuestionPills();
+      restoreState();
+      bindEvents();
+      drawParticles();
+      drawMockQr();
+      if (!state.selectedZodiac) selectZodiac('dragon');
+    }
+
+    function renderZodiacs() {
+      el.zodiacGrid.innerHTML = zodiacs.map(z => `
+        <div class="zodiac-card ${state.selectedZodiac === z.key ? 'active' : ''}" data-zodiac="${z.key}">
+          <span class="zodiac-icon">${z.icon}</span>
+          <span>${z.name}</span>
+        </div>
+      `).join('');
+    }
+
+    function renderQuestionPills() {
+      el.questionPills.innerHTML = questionCategories.map(q => `
+        <div class="pill ${state.selectedQuestion === q.key ? 'active' : ''}" data-question="${q.key}">${q.label}</div>
+      `).join('');
+    }
+
+    function bindEvents() {
+      el.zodiacGrid.addEventListener('click', (e) => {
+        const card = e.target.closest('.zodiac-card');
+        if (!card) return;
+        selectZodiac(card.dataset.zodiac);
+      });
+
+      el.questionPills.addEventListener('click', (e) => {
+        const pill = e.target.closest('.pill');
+        if (!pill) return;
+        state.selectedQuestion = pill.dataset.question;
+        renderQuestionPills();
+      });
+
+      el.beginBtn.addEventListener('click', startDivination);
+      el.unlockBtn.addEventListener('click', () => el.paymentSection.classList.remove('hidden'));
+      el.togglePaymentBtn.addEventListener('click', () => {
+        state.paymentMocked = !state.paymentMocked;
+        el.togglePaymentBtn.textContent = `切换模拟付款状态：${state.paymentMocked ? '已付款' : '未付款'}`;
+      });
+      el.confirmPaymentBtn.addEventListener('click', confirmPayment);
+      el.restartBtn.addEventListener('click', resetExperience);
+      el.restartTopBtn.addEventListener('click', resetExperience);
+      el.redrawCardBtn.addEventListener('click', drawFortuneCard);
+      el.downloadCardBtn.addEventListener('click', downloadFortuneCard);
+      window.addEventListener('resize', debounce(drawParticles, 120));
+    }
+
+    function selectZodiac(key) {
+      state.selectedZodiac = key;
+      renderZodiacs();
+    }
+
+    function showError(target, message) {
+      target.textContent = message;
+      target.classList.remove('hidden');
+    }
+
+    function clearError(target) {
+      target.textContent = '';
+      target.classList.add('hidden');
+    }
+
+    function startDivination() {
+      clearError(el.entryError);
+      clearError(el.globalError);
+      const name = el.nameInput.value.trim();
+      const birthDate = el.birthInput.value;
+      if (!name) return showError(el.entryError, '先留下名号，卦象才知道该落在谁身上。');
+      if (!state.selectedZodiac) return showError(el.entryError, '请先选定生肖，再启此卦。');
+
+      state.currentUser = { name, birthDate, zodiac: state.selectedZodiac, question: state.selectedQuestion };
+      saveUserState();
+      el.processSection.classList.remove('hidden');
+      el.resultsSection.classList.add('hidden');
+      el.paymentSection.classList.add('hidden');
+      el.fullReadingSection.classList.add('hidden');
+      el.fortuneCardSection.classList.add('hidden');
+      el.processSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      runDivinationSequence();
+    }
+
+    async function runDivinationSequence() {
+      const steps = [
+        { label: '净心', copy: '请将杂念缓缓放下，让心意归于一点。所问越真，所见越明。', type: 'breath', duration: 1500 },
+        { label: '问卦', copy: '阴阳交映，八象轮转。你此刻关心的事，已被悄悄写进风里。', type: 'yinYang', duration: 2000 },
+        { label: '呈象', copy: '墨痕将开，卦意浮现。你想知道的答案，正从幽微处显形。', type: 'reveal', duration: 1500 }
+      ];
+
+      for (let i = 0; i < steps.length; i++) {
+        const step = steps[i];
+        el.stepLabel.textContent = step.label;
+        el.stepCopy.textContent = step.copy;
+        el.statusDots.forEach((dot, idx) => dot.classList.toggle('active', idx <= i));
+        if (step.type === 'breath') {
+          el.processCore.className = 'breath-circle';
+          el.processCore.textContent = '';
+        } else if (step.type === 'yinYang') {
+          el.processCore.className = 'yin-yang';
+          el.processCore.textContent = '☯';
+        } else {
+          el.processCore.className = 'breath-circle';
+          el.processCore.textContent = '';
+          el.processCore.style.animation = 'inhaleExhale 1.2s ease-in-out infinite';
+        }
+        await wait(step.duration);
+      }
+
+      await generateFortune();
+    }
+
+    async function generateFortune() {
+      try {
+        el.beginBtn.disabled = true;
+        const cached = findPaidCache();
+        if (cached) {
+          state.fortune = cached.fortune;
+          renderResults(cached.fortune);
+          return;
+        }
+
+        const zodiac = zodiacs.find(z => z.key === state.currentUser.zodiac);
+        const prompt = `求测者姓名：${state.currentUser.name}\n生肖：${zodiac.name}\n出生日期：${state.currentUser.birthDate || '未提供'}\n所问方向：${questionCategories.find(q => q.key === state.currentUser.question)?.label || '事业'}\n\n请输出严格 JSON，对象格式如下：{"insight":"...","full_reading":{"career":"...","love":"...","wealth":"...","health":"..."},"monthly_forecast":"...","lucky_items":["...","...","..."]}`;
+
+        const response = await fetch(DEEPSEEK_API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+          },
+          body: JSON.stringify({
+            model: 'deepseek-chat',
+            temperature: 1.05,
+            messages: [
+              {
+                role: 'system',
+                content: '你是一位有300年修为的东方命理大师，说话既有古风韵味又直击人心。你的解读要有洞察力、有画面感，让求测者觉得“太准了”。风格：半文半白，古意盎然，温暖有力。不要用列表，用流畅的散文。分免费洞察和付费完整解读两部分输出。只返回 JSON。'
+              },
+              {
+                role: 'user',
+                content: prompt
+              }
+            ]
+          })
+        });
+
+        if (!response.ok) throw new Error(`API ${response.status}`);
+        const data = await response.json();
+        const raw = data?.choices?.[0]?.message?.content || '';
+        const parsed = parseJsonSafely(raw);
+        const fortune = normalizeFortune(parsed || fallbackCopy);
+        state.fortune = fortune;
+        renderResults(fortune);
+      } catch (error) {
+        console.error(error);
+        state.fortune = normalizeFortune(fallbackCopy);
+        renderResults(state.fortune, true);
+      } finally {
+        el.beginBtn.disabled = false;
+      }
+    }
+
+    function renderResults(fortune, usedFallback = false) {
+      const zodiac = zodiacs.find(z => z.key === state.currentUser.zodiac);
+      el.processSection.classList.add('hidden');
+      el.resultsSection.classList.remove('hidden');
+      el.paymentSection.classList.add('hidden');
+      el.resultAnimal.textContent = zodiac?.icon || '🐉';
+      el.categoryTitle.textContent = categoryDisplay[state.currentUser.question] || '天机初现';
+      el.ritualMeta.textContent = `${state.currentUser.name} · ${zodiac?.name || ''} · ${questionCategories.find(q => q.key === state.currentUser.question)?.label || ''}`;
+      el.insightText.textContent = fortune.insight;
+      if (usedFallback) {
+        showError(el.globalError, '方才星象稍有扰动，已为你改以阁中备用灵签呈现解读，意象依旧可参。');
+      } else {
+        clearError(el.globalError);
+      }
+      startCountdown();
+      el.resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (isRecentPaymentUnlocked()) {
+        revealFullReading();
+      }
+    }
+
+    function startCountdown() {
+      clearInterval(state.countdownTimerId);
+      state.countdown = 600;
+      updateCountdownUI();
+      state.countdownTimerId = setInterval(() => {
+        state.countdown = Math.max(0, state.countdown - 1);
+        updateCountdownUI();
+        if (state.countdown === 0) clearInterval(state.countdownTimerId);
+      }, 1000);
+    }
+
+    function updateCountdownUI() {
+      const minutes = String(Math.floor(state.countdown / 60)).padStart(2, '0');
+      const seconds = String(state.countdown % 60).padStart(2, '0');
+      el.countdownTimer.textContent = `${minutes}:${seconds}`;
+    }
+
+    function confirmPayment() {
+      if (!state.paymentMocked && !isRecentPaymentUnlocked()) {
+        return showError(el.globalError, '演示模式下，请先把“模拟付款状态”切换为已付款，再来揭开全卷。');
+      }
+      clearError(el.globalError);
+      storePaymentUnlock();
+      revealFullReading();
+    }
+
+    function revealFullReading() {
+      el.paymentSection.classList.add('hidden');
+      el.fullReadingSection.classList.remove('hidden');
+      el.fortuneCardSection.classList.remove('hidden');
+      renderFullReading();
+      drawFortuneCard();
+      el.fullReadingSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function renderFullReading() {
+      const fortune = state.fortune || normalizeFortune(fallbackCopy);
+      const dims = [
+        { key: 'career', title: '事业', advice: '先立主轴，再求扩张。把能沉淀的事情做出深度，贵人自会闻香而来。' },
+        { key: 'love', title: '感情', advice: '别总等对方先懂你。将心事说出口，缘分才不会在沉默里错身而过。' },
+        { key: 'wealth', title: '财运', advice: '守得住，才接得住。近期适合稳健布局，少做情绪化消费。' },
+        { key: 'health', title: '健康', advice: '你需要的不只是休息，而是停止内耗。规律、松弛、流汗，皆是良药。' }
+      ];
+      el.fullGrid.innerHTML = dims.map(dim => {
+        const text = fortune.full_reading[dim.key] || '';
+        const stars = '★'.repeat(scoreText(text)) + '☆'.repeat(5 - scoreText(text));
+        return `
+          <div class="dimension ink-reveal">
+            <h4>${dim.title}</h4>
+            <div class="stars">${stars}</div>
+            <p>${text}</p>
+            <div class="advice">${dim.advice}</div>
+          </div>
+        `;
+      }).join('');
+      el.monthlyForecast.textContent = fortune.monthly_forecast;
+      el.luckyList.innerHTML = fortune.lucky_items.map(item => `<div class="lucky-item">${item}</div>`).join('');
+    }
+
+    function scoreText(text) {
+      const len = (text || '').length;
+      if (len > 95) return 5;
+      if (len > 72) return 4;
+      if (len > 50) return 3;
+      if (len > 30) return 2;
+      return 1;
+    }
+
+    function drawMockQr() {
+      const canvas = el.qrCanvas;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      const cell = 12;
+      for (let y = 0; y < 20; y++) {
+        for (let x = 0; x < 20; x++) {
+          const val = (x * 7 + y * 11 + x * y) % 5;
+          if (val === 0 || val === 2) {
+            ctx.fillStyle = '#111';
+            ctx.fillRect(18 + x * cell, 18 + y * cell, cell - 2, cell - 2);
+          }
+        }
+      }
+      [ [18,18], [18,162], [162,18] ].forEach(([x,y]) => drawFinder(ctx, x, y));
+      ctx.fillStyle = '#0f0f0f';
+      ctx.font = 'bold 14px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Alipay Demo', 120, 230);
+    }
+
+    function drawFinder(ctx, x, y) {
+      ctx.fillStyle = '#111';
+      ctx.fillRect(x, y, 54, 54);
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(x + 8, y + 8, 38, 38);
+      ctx.fillStyle = '#111';
+      ctx.fillRect(x + 16, y + 16, 22, 22);
+    }
+
+    function drawFortuneCard() {
+      const fortune = state.fortune;
+      if (!fortune || !state.currentUser) return;
+      const canvas = el.fortuneCardCanvas;
+      const ctx = canvas.getContext('2d');
+      const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      gradient.addColorStop(0, '#0b0a10');
+      gradient.addColorStop(0.5, '#1a0c2a');
+      gradient.addColorStop(1, '#240e19');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < 80; i++) {
+        ctx.fillStyle = `rgba(212,175,55,${Math.random() * 0.4})`;
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const r = Math.random() * 2.6;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.strokeStyle = 'rgba(212,175,55,0.25)';
+      ctx.lineWidth = 3;
+      roundRect(ctx, 46, 46, canvas.width - 92, canvas.height - 92, 34, true, false);
+      ctx.strokeStyle = 'rgba(212,175,55,0.14)';
+      roundRect(ctx, 76, 76, canvas.width - 152, canvas.height - 152, 30, true, false);
+
+      ctx.fillStyle = '#f6dfa0';
+      ctx.textAlign = 'center';
+      ctx.font = '78px "Ma Shan Zheng", serif';
+      ctx.fillText('玄鉴阁', canvas.width / 2, 190);
+      ctx.font = '36px "Noto Serif SC", serif';
+      ctx.fillStyle = 'rgba(255,240,210,0.88)';
+      ctx.fillText(`${state.currentUser.name} · ${questionCategories.find(q => q.key === state.currentUser.question)?.label}`, canvas.width / 2, 250);
+
+      ctx.font = '110px serif';
+      ctx.fillText(zodiacs.find(z => z.key === state.currentUser.zodiac)?.icon || '🐉', canvas.width / 2, 430);
+
+      ctx.font = '42px "Noto Serif SC", serif';
+      ctx.fillStyle = '#f4d77f';
+      ctx.fillText(categoryDisplay[state.currentUser.question] || '天机初现', canvas.width / 2, 520);
+
+      ctx.fillStyle = 'rgba(255,246,226,0.92)';
+      ctx.font = '34px "Noto Serif SC", serif';
+      wrapText(ctx, fortune.insight, 120, 620, canvas.width - 240, 56, 8);
+
+      ctx.fillStyle = 'rgba(212,175,55,0.92)';
+      ctx.font = '32px "Noto Serif SC", serif';
+      ctx.fillText('本月运势', canvas.width / 2, 1120);
+      ctx.fillStyle = 'rgba(255,241,214,0.86)';
+      ctx.font = '28px "Noto Serif SC", serif';
+      wrapText(ctx, fortune.monthly_forecast, 140, 1180, canvas.width - 280, 46, 6);
+
+      ctx.fillStyle = '#f5d77f';
+      ctx.font = '30px "Noto Serif SC", serif';
+      ctx.fillText(`吉祥物：${fortune.lucky_items.join(' · ')}`, canvas.width / 2, 1460);
+
+      ctx.fillStyle = 'rgba(255,240,210,0.6)';
+      ctx.font = '24px "Noto Serif SC", serif';
+      ctx.fillText('长按保存此卡，与有缘人共观此象', canvas.width / 2, 1520);
+    }
+
+    function downloadFortuneCard() {
+      drawFortuneCard();
+      const link = document.createElement('a');
+      link.href = el.fortuneCardCanvas.toDataURL('image/png');
+      link.download = `fortune-${Date.now()}.png`;
+      link.click();
+    }
+
+    function roundRect(ctx, x, y, w, h, r, stroke, fill) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+      if (fill) ctx.fill();
+      if (stroke) ctx.stroke();
+    }
+
+    function wrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 999) {
+      const chars = [...text];
+      let line = '';
+      let lines = 0;
+      for (let i = 0; i < chars.length; i++) {
+        const testLine = line + chars[i];
+        if (ctx.measureText(testLine).width > maxWidth && line) {
+          ctx.fillText(line, x + maxWidth / 2, y + lines * lineHeight);
+          line = chars[i];
+          lines++;
+          if (lines >= maxLines) return;
+        } else {
+          line = testLine;
+        }
+      }
+      if (line && lines < maxLines) ctx.fillText(line, x + maxWidth / 2, y + lines * lineHeight);
+    }
+
+    function normalizeFortune(raw) {
+      return {
+        insight: raw?.insight || fallbackCopy.insight,
+        full_reading: {
+          career: raw?.full_reading?.career || fallbackCopy.full_reading.career,
+          love: raw?.full_reading?.love || fallbackCopy.full_reading.love,
+          wealth: raw?.full_reading?.wealth || fallbackCopy.full_reading.wealth,
+          health: raw?.full_reading?.health || fallbackCopy.full_reading.health
+        },
+        monthly_forecast: raw?.monthly_forecast || fallbackCopy.monthly_forecast,
+        lucky_items: Array.isArray(raw?.lucky_items) && raw.lucky_items.length ? raw.lucky_items.slice(0, 3) : fallbackCopy.lucky_items
+      };
+    }
+
+    function parseJsonSafely(text) {
+      try {
+        return JSON.parse(text);
+      } catch {
+        const match = text.match(/\{[\s\S]*\}/);
+        if (!match) return null;
+        try { return JSON.parse(match[0]); } catch { return null; }
+      }
+    }
+
+    function saveUserState() {
+      const stored = getStoredData();
+      stored.lastUser = {
+        name: state.currentUser.name,
+        birthDate: state.currentUser.birthDate,
+        zodiac: state.currentUser.zodiac,
+        question: state.currentUser.question
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+    }
+
+    function storePaymentUnlock() {
+      const stored = getStoredData();
+      const signature = getQuestionSignature();
+      stored.unlocks = stored.unlocks || {};
+      stored.unlocks[signature] = {
+        at: Date.now(),
+        fortune: state.fortune
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+    }
+
+    function getQuestionSignature() {
+      const u = state.currentUser;
+      return [u?.name || '', u?.zodiac || '', u?.birthDate || 'none', u?.question || 'career'].join('|');
+    }
+
+    function isRecentPaymentUnlocked() {
+      const unlock = findPaidCache();
+      return !!unlock;
+    }
+
+    function findPaidCache() {
+      const stored = getStoredData();
+      const signature = getQuestionSignature();
+      const entry = stored.unlocks?.[signature];
+      if (!entry) return null;
+      const age = Date.now() - entry.at;
+      if (age > PAYMENT_WINDOW_HOURS * 60 * 60 * 1000) return null;
+      return entry;
+    }
+
+    function restoreState() {
+      const stored = getStoredData();
+      if (stored.lastUser) {
+        el.nameInput.value = stored.lastUser.name || '';
+        el.birthInput.value = stored.lastUser.birthDate || '';
+        state.selectedQuestion = stored.lastUser.question || 'career';
+        state.selectedZodiac = stored.lastUser.zodiac || null;
+      }
+    }
+
+    function getStoredData() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      } catch {
+        return {};
+      }
+    }
+
+    function resetExperience() {
+      clearInterval(state.countdownTimerId);
+      state.fortune = null;
+      state.paymentMocked = false;
+      el.togglePaymentBtn.textContent = '切换模拟付款状态：未付款';
+      el.processSection.classList.add('hidden');
+      el.resultsSection.classList.add('hidden');
+      el.paymentSection.classList.add('hidden');
+      el.fullReadingSection.classList.add('hidden');
+      el.fortuneCardSection.classList.add('hidden');
+      clearError(el.globalError);
+      document.getElementById('hero').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function wait(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function debounce(fn, delay) {
+      let timer;
+      return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn(...args), delay);
+      };
+    }
+
+    function drawParticles() {
+      const canvas = document.getElementById('particles');
+      const ctx = canvas.getContext('2d');
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      canvas.style.width = window.innerWidth + 'px';
+      canvas.style.height = window.innerHeight + 'px';
+      ctx.scale(dpr, dpr);
+
+      const particleCount = Math.min(90, Math.floor(window.innerWidth / 14));
+      const particles = Array.from({ length: particleCount }, () => ({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        r: Math.random() * 1.8 + 0.3,
+        vy: Math.random() * 0.22 + 0.08,
+        vx: (Math.random() - 0.5) * 0.12,
+        alpha: Math.random() * 0.7 + 0.1
+      }));
+
+      function frame() {
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y -= p.vy;
+          if (p.y < -10) {
+            p.y = window.innerHeight + 10;
+            p.x = Math.random() * window.innerWidth;
+          }
+          if (p.x < -10) p.x = window.innerWidth + 10;
+          if (p.x > window.innerWidth + 10) p.x = -10;
+          ctx.beginPath();
+          ctx.fillStyle = `rgba(212,175,55,${p.alpha})`;
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        requestAnimationFrame(frame);
+      }
+      frame();
+    }
+
+    init();
+  </script>
+</body>
+</html>
