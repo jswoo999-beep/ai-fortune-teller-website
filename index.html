@@ -243,6 +243,207 @@
       box-shadow: 0 0 0 4px rgba(212,175,55,0.12);
     }
 
+    .field-hint {
+      font-size: 0.82em;
+      color: rgba(212,175,55,0.55);
+      font-weight: 400;
+    }
+
+    .birth-input-wrap {
+      position: relative;
+    }
+
+    .birth-input-wrap input {
+      padding-right: 44px;
+    }
+
+    .birth-hint-icon {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(212,175,55,0.5);
+      font-size: 1.1rem;
+      pointer-events: none;
+      animation: starPulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes starPulse {
+      0%, 100% { opacity: 0.4; transform: translateY(-50%) scale(1); }
+      50% { opacity: 1; transform: translateY(-50%) scale(1.2); }
+    }
+
+    /* Highlight the birth field subtly when user hasn't filled it */
+    .birth-display.has-value .birth-hint-icon {
+      color: rgba(212,175,55,0.9);
+      animation: none;
+    }
+
+    .birth-display {
+      width: 100%;
+      padding: 14px 44px 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(212,175,55,0.18);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      font: inherit;
+      cursor: pointer;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .birth-display:hover, .birth-display:focus {
+      border-color: rgba(212,175,55,0.55);
+      box-shadow: 0 0 0 4px rgba(212,175,55,0.12);
+      outline: none;
+    }
+
+    .birth-placeholder {
+      color: rgba(255,240,210,0.44);
+    }
+
+    .birth-display .birth-hint-icon {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(212,175,55,0.5);
+      font-size: 1.1rem;
+      pointer-events: none;
+      animation: starPulse 2.4s ease-in-out infinite;
+    }
+
+    /* ── Custom Date Picker Overlay ── */
+    .date-picker-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 9999;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .date-picker-sheet {
+      background: linear-gradient(180deg, #1a1030, #0f0c1a);
+      border: 1px solid rgba(212,175,55,0.2);
+      border-bottom: none;
+      border-radius: 28px 28px 0 0;
+      width: 100%;
+      max-width: 520px;
+      padding: 0 0 env(safe-area-inset-bottom, 16px);
+      animation: slideUp 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .picker-handle {
+      width: 40px;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(212,175,55,0.3);
+      margin: 14px auto 6px;
+    }
+
+    .picker-title {
+      text-align: center;
+      color: #f6dfa1;
+      font-size: 1.05rem;
+      letter-spacing: 0.08em;
+      padding: 8px 20px 16px;
+      border-bottom: 1px solid rgba(212,175,55,0.1);
+    }
+
+    .picker-columns {
+      display: flex;
+      gap: 8px;
+      padding: 16px 14px 8px;
+      align-items: stretch;
+    }
+
+    .picker-column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .picker-column-label {
+      font-size: 0.78rem;
+      color: rgba(212,175,55,0.55);
+      letter-spacing: 0.1em;
+      margin-bottom: 6px;
+    }
+
+    .picker-wheel {
+      height: 156px;
+      overflow: hidden;
+      position: relative;
+      width: 100%;
+      mask: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
+      -webkit-mask: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
+    }
+
+    .picker-wheel-inner {
+      transition: transform 0.12s ease;
+    }
+
+    .picker-item {
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      color: rgba(255,240,210,0.38);
+      cursor: pointer;
+      transition: color 0.15s, transform 0.15s;
+      user-select: none;
+    }
+
+    .picker-item.active {
+      color: #f6dfa1;
+      font-weight: 600;
+      transform: scale(1.1);
+    }
+
+    .picker-item.near {
+      color: rgba(255,240,210,0.62);
+    }
+
+    .picker-confirm {
+      margin: 8px 20px 0;
+      padding: 14px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #f8dd8d, #d4af37);
+      border: none;
+      color: #1a1208;
+      font: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: calc(100% - 40px);
+      box-shadow: 0 8px 28px rgba(212,175,55,0.3);
+    }
+
+    .picker-confirm-hint {
+      text-align: center;
+      color: rgba(255,240,210,0.35);
+      font-size: 0.82rem;
+      padding: 8px 20px 14px;
+    }
+
     .zodiac-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -704,9 +905,15 @@
             <div class="zodiac-grid" id="zodiacGrid"></div>
           </div>
 
-          <div class="field">
-            <label for="birthInput">生辰（可选，更利推演）</label>
-            <input id="birthInput" type="date" />
+          <div class="field birth-field">
+            <label>生辰 <span class="field-hint">（提供后解读更精准）</span></label>
+            <div class="birth-input-wrap" id="birthInputTrigger">
+              <input id="birthInput" type="hidden" />
+              <div class="birth-display" id="birthDisplay">
+                <span class="birth-placeholder">点击选择出生日期</span>
+                <span class="birth-hint-icon">✦</span>
+              </div>
+            </div>
           </div>
 
           <div>
@@ -877,6 +1084,7 @@
       questionPills: document.getElementById('questionPills'),
       nameInput: document.getElementById('nameInput'),
       birthInput: document.getElementById('birthInput'),
+      birthDisplay: document.getElementById('birthDisplay'),
       beginBtn: document.getElementById('beginBtn'),
       entryError: document.getElementById('entryError'),
       processSection: document.getElementById('processSection'),
@@ -948,6 +1156,7 @@
       });
 
       el.beginBtn.addEventListener('click', startDivination);
+      el.birthDisplay.addEventListener('click', openDatePicker);
       el.unlockBtn.addEventListener('click', () => el.paymentSection.classList.remove('hidden'));
       el.togglePaymentBtn.addEventListener('click', () => {
         state.paymentMocked = !state.paymentMocked;
@@ -1366,7 +1575,10 @@
       const stored = getStoredData();
       if (stored.lastUser) {
         el.nameInput.value = stored.lastUser.name || '';
-        el.birthInput.value = stored.lastUser.birthDate || '';
+        if (stored.lastUser.birthDate) {
+          el.birthInput.value = stored.lastUser.birthDate;
+          updateBirthDisplay();
+        }
         state.selectedQuestion = stored.lastUser.question || 'career';
         state.selectedZodiac = stored.lastUser.zodiac || null;
       }
@@ -1448,6 +1660,161 @@
     }
 
     init();
+
+    // ── Custom Date Picker ──
+    function openDatePicker() {
+      const existing = document.querySelector('.date-picker-overlay');
+      if (existing) existing.remove();
+
+      const today = new Date();
+      const currentYear = parseInt(el.birthInput.value.split('-')[0]) || 1990;
+      const currentMonth = parseInt(el.birthInput.value.split('-')[1]) || 1;
+      const currentDay = parseInt(el.birthInput.value.split('-')[2]) || 1;
+
+      const years = [];
+      for (let y = today.getFullYear(); y >= 1940; y--) years.push(y);
+      const months = Array.from({ length: 12 }, (_, i) => i + 1);
+      const daysInMonth = new Date(currentYear || 1990, (currentMonth || 1), 0).getDate();
+      const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+
+      let selectedYear = currentYear;
+      let selectedMonth = currentMonth;
+      let selectedDay = currentDay;
+
+      const overlay = document.createElement('div');
+      overlay.className = 'date-picker-overlay';
+      overlay.innerHTML = `
+        <div class="date-picker-sheet">
+          <div class="picker-handle"></div>
+          <div class="picker-title">选择出生日期</div>
+          <div class="picker-columns" id="pickerColumns">
+            <div class="picker-column" id="pickerYear">
+              <div class="picker-column-label">年</div>
+              <div class="picker-wheel"><div class="picker-wheel-inner"></div></div>
+            </div>
+            <div class="picker-column" id="pickerMonth">
+              <div class="picker-column-label">月</div>
+              <div class="picker-wheel"><div class="picker-wheel-inner"></div></div>
+            </div>
+            <div class="picker-column" id="pickerDay">
+              <div class="picker-column-label">日</div>
+              <div class="picker-wheel"><div class="picker-wheel-inner"></div></div>
+            </div>
+          </div>
+          <button class="picker-confirm" id="pickerConfirm">确认</button>
+          <div class="picker-confirm-hint">滑动选择，或点击任意项直接选中</div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+
+      const yearCol = overlay.querySelector('#pickerYear .picker-wheel-inner');
+      const monthCol = overlay.querySelector('#pickerMonth .picker-wheel-inner');
+      const dayCol = overlay.querySelector('#pickerDay .picker-wheel-inner');
+
+      function scrollColumn(colEl, items, selected, onSelect) {
+        const ITEM_H = 52;
+        const VISIBLE = 3;
+        const center = (VISIBLE - 1) / 2;
+        const startOffset = -center * ITEM_H;
+
+        colEl.innerHTML = items.map((v, i) => {
+          const active = v === selected ? ' active' : (Math.abs(items.indexOf(v) - items.indexOf(selected)) === 1 ? ' near' : '');
+          return `<div class="picker-item${active}" data-val="${v}">${String(v).padStart(2, '0')}</div>`;
+        }).join('');
+
+        colEl.style.transform = `translateY(${startOffset}px)`;
+
+        let currentIdx = items.indexOf(selected);
+        if (currentIdx < 0) currentIdx = 0;
+
+        function applyIdx(idx) {
+          currentIdx = Math.max(0, Math.min(items.length - 1, idx));
+          const offset = startOffset - currentIdx * ITEM_H;
+          colEl.style.transition = 'transform 0.18s ease';
+          colEl.style.transform = `translateY(${offset}px)`;
+          colEl.querySelectorAll('.picker-item').forEach((el2, i) => {
+            el2.classList.remove('active', 'near');
+            if (i === currentIdx) el2.classList.add('active');
+            else if (Math.abs(i - currentIdx) === 1) el2.classList.add('near');
+          });
+          onSelect(items[currentIdx]);
+        }
+
+        // Snap on scroll end
+        let startY = 0, startIdx = currentIdx, dragging = false;
+        colEl.addEventListener('touchstart', (e) => {
+          startY = e.touches[0].clientY;
+          startIdx = currentIdx;
+          dragging = true;
+          colEl.style.transition = 'none';
+        }, { passive: true });
+        colEl.addEventListener('touchmove', (e) => {
+          if (!dragging) return;
+          const dy = e.touches[0].clientY - startY;
+          const offset = startOffset - startIdx * ITEM_H + dy;
+          const idx = Math.round((startOffset - offset) / ITEM_H) + startIdx;
+          const clamped = Math.max(0, Math.min(items.length - 1, idx));
+          const currOffset = startOffset - clamped * ITEM_H;
+          colEl.style.transition = 'none';
+          colEl.style.transform = `translateY(${currOffset}px)`;
+          colEl.querySelectorAll('.picker-item').forEach((el2, i) => {
+            el2.classList.remove('active', 'near');
+            if (i === clamped) el2.classList.add('active');
+            else if (Math.abs(i - clamped) === 1) el2.classList.add('near');
+          });
+          onSelect(items[clamped]);
+        }, { passive: true });
+        colEl.addEventListener('touchend', () => {
+          dragging = false;
+          const offset = parseFloat(colEl.style.transform.replace('translateY(', '').replace('px)', ''));
+          const idx = Math.round((startOffset - offset) / ITEM_H);
+          applyIdx(idx + startIdx);
+        }, { passive: true });
+
+        // Click to select
+        colEl.querySelectorAll('.picker-item').forEach(item => {
+          item.addEventListener('click', () => {
+            applyIdx(items.indexOf(parseInt(item.dataset.val)));
+          });
+        });
+      }
+
+      scrollColumn(yearCol, years, selectedYear, v => selectedYear = v);
+      scrollColumn(monthCol, months, selectedMonth, v => {
+        selectedMonth = v;
+        const newDays = Array.from({ length: new Date(selectedYear, selectedMonth, 0).getDate() }, (_, i) => i + 1);
+        scrollColumn(dayCol, newDays, Math.min(selectedDay, newDays.length), v => selectedDay = v);
+      });
+      scrollColumn(dayCol, days, Math.min(selectedDay, days.length), v => selectedDay = v);
+
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+          overlay.remove();
+        }
+      });
+
+      overlay.querySelector('#pickerConfirm').addEventListener('click', () => {
+        const y = String(selectedYear);
+        const m = String(selectedMonth).padStart(2, '0');
+        const d = String(selectedDay).padStart(2, '0');
+        el.birthInput.value = `${y}-${m}-${d}`;
+        el.birthDisplay.innerHTML = `<span>${y}年${m}月${d}日</span><span class="birth-hint-icon">✦</span>`;
+        el.birthDisplay.classList.add('has-value');
+        overlay.remove();
+      });
+    }
+
+    function updateBirthDisplay() {
+      const v = el.birthInput.value;
+      if (v) {
+        const [y, m, d] = v.split('-');
+        el.birthDisplay.innerHTML = `<span>${y}年${m}月${d}日</span><span class="birth-hint-icon">✦</span>`;
+        el.birthDisplay.classList.add('has-value');
+      } else {
+        el.birthDisplay.innerHTML = `<span class="birth-placeholder">点击选择出生日期</span><span class="birth-hint-icon">✦</span>`;
+        el.birthDisplay.classList.remove('has-value');
+      }
+    }
   </script>
 </body>
 </html>
