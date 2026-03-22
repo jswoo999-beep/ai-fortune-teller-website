@@ -396,6 +396,18 @@
       animation: fadeIn 0.2s ease;
       overscroll-behavior: none;
       overflow: hidden;
+      touch-action: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .date-picker-sheet {
+      touch-action: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .picker-wheel {
+      touch-action: none;
+      -webkit-touch-callout: none;
     }
 
     .picker-wheel-inner {
@@ -1681,7 +1693,7 @@
       const years = [];
       for (let y = today.getFullYear(); y >= 1940; y--) years.push(y);
       const months = Array.from({ length: 12 }, (_, i) => i + 1);
-      const daysInMonth = new Date(currentYear || 1990, (currentMonth || 1), 0).getDate();
+      const daysInMonth = new Date(currentYear || 1990, (currentMonth || 1) - 1, 0).getDate();
       const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
       let selectedYear = currentYear;
@@ -1713,6 +1725,11 @@
         </div>
       `;
       document.body.appendChild(overlay);
+
+      // Block all touch events on the sheet so they never bubble to background
+      const sheet = overlay.querySelector('.date-picker-sheet');
+      sheet.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
+      sheet.addEventListener('touchstart', e => e.preventDefault(), { passive: false });
 
       const yearCol = overlay.querySelector('#pickerYear .picker-wheel-inner');
       const monthCol = overlay.querySelector('#pickerMonth .picker-wheel-inner');
@@ -1789,7 +1806,7 @@
       scrollColumn(yearCol, years, selectedYear, v => selectedYear = v);
       scrollColumn(monthCol, months, selectedMonth, v => {
         selectedMonth = v;
-        const newDays = Array.from({ length: new Date(selectedYear, selectedMonth, 0).getDate() }, (_, i) => i + 1);
+        const newDays = Array.from({ length: new Date(selectedYear, selectedMonth - 1, 0).getDate() }, (_, i) => i + 1);
         scrollColumn(dayCol, newDays, Math.min(selectedDay, newDays.length), v => selectedDay = v);
       });
       scrollColumn(dayCol, days, Math.min(selectedDay, days.length), v => selectedDay = v);
