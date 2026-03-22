@@ -316,22 +316,6 @@
       animation: starPulse 2.4s ease-in-out infinite;
     }
 
-    /* ── Custom Date Picker Overlay ── */
-    .date-picker-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      z-index: 9999;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      animation: fadeIn 0.2s ease;
-    }
-
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
     .date-picker-sheet {
       background: linear-gradient(180deg, #1a1030, #0f0c1a);
       border: 1px solid rgba(212,175,55,0.2);
@@ -392,8 +376,26 @@
       overflow: hidden;
       position: relative;
       width: 100%;
+      touch-action: none;
+      -webkit-touch-select: none;
+      user-select: none;
       mask: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
       -webkit-mask: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
+    }
+
+    .date-picker-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 9999;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      animation: fadeIn 0.2s ease;
+      overscroll-behavior: none;
+      overflow: hidden;
     }
 
     .picker-wheel-inner {
@@ -1666,6 +1668,11 @@
       const existing = document.querySelector('.date-picker-overlay');
       if (existing) existing.remove();
 
+      // Block all touch scroll on document while picker is open
+      function blockTouch(e) { e.preventDefault(); }
+      document.addEventListener('touchmove', blockTouch, { capture: true, passive: false });
+      document.addEventListener('touchstart', blockTouch, { capture: true, passive: false });
+
       const today = new Date();
       const currentYear = parseInt(el.birthInput.value.split('-')[0]) || 1990;
       const currentMonth = parseInt(el.birthInput.value.split('-')[1]) || 1;
@@ -1789,6 +1796,8 @@
 
       overlay.addEventListener('click', (e) => {
         if (e.target === overlay) {
+          document.removeEventListener('touchmove', blockTouch, { capture: true });
+          document.removeEventListener('touchstart', blockTouch, { capture: true });
           overlay.remove();
         }
       });
@@ -1800,6 +1809,8 @@
         el.birthInput.value = `${y}-${m}-${d}`;
         el.birthDisplay.innerHTML = `<span>${y}年${m}月${d}日</span><span class="birth-hint-icon">✦</span>`;
         el.birthDisplay.classList.add('has-value');
+        document.removeEventListener('touchmove', blockTouch, { capture: true });
+        document.removeEventListener('touchstart', blockTouch, { capture: true });
         overlay.remove();
       });
     }
