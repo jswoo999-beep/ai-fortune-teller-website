@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>玄鉴阁 · AI命理占卜</title>
   <meta name="description" content="玄鉴阁：沉浸式东方命理占卜体验，诚心问事，一念呈象。" />
+  <!-- 塔罗牌功能待实现 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -1210,6 +1211,16 @@
       });
 
       el.beginBtn.addEventListener('click', startDivination);
+      // 统一触发自定义滚轮日期选择器，阻止任何原生 picker 干扰
+      function handleBirthPickerTrigger(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        openDatePicker();
+      }
+      el.birthDisplay.addEventListener('click', handleBirthPickerTrigger);
+      el.birthDisplay.addEventListener('touchend', handleBirthPickerTrigger);
+      el.birthDisplay.addEventListener('mousedown', handleBirthPickerTrigger);
+      el.birthDisplay.addEventListener('touchstart', handleBirthPickerTrigger);
       el.unlockBtn.addEventListener('click', () => el.paymentSection.classList.remove('hidden'));
       el.togglePaymentBtn.addEventListener('click', () => {
         state.paymentMocked = !state.paymentMocked;
