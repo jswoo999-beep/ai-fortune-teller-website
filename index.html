@@ -1025,7 +1025,7 @@
           <div class="timer" id="countdownTimer">09:59</div>
         </div>
         <div class="cta-row">
-          <button class="primary-btn" id="unlockBtn">¥9.9 解锁完整年度运势</button>
+          <button type="button" class="primary-btn" id="unlockBtn">¥9.9 解锁完整年度运势</button>
           <button class="secondary-btn" id="restartTopBtn">再次占卜</button>
         </div>
       </div>
@@ -1042,7 +1042,7 @@
               若你觉得这份解读毫无照见之处，那便当它是夜里的一盏灯，看过即散；若其中一句恰好点中你，那这九块九，也算替自己买了一次心安。
             </div>
             <div class="cta-row">
-              <button class="primary-btn" id="confirmPaymentBtn">我已付款，查看完整解读</button>
+              <button type="button" class="primary-btn" id="confirmPaymentBtn">我已付款，查看完整解读</button>
               <button class="secondary-btn" id="togglePaymentBtn">切换模拟付款状态：未付款</button>
             </div>
           </div>
@@ -1221,7 +1221,14 @@
       el.birthDisplay.addEventListener('touchend', handleBirthPickerTrigger);
       el.birthDisplay.addEventListener('mousedown', handleBirthPickerTrigger);
       el.birthDisplay.addEventListener('touchstart', handleBirthPickerTrigger);
-      el.unlockBtn.addEventListener('click', () => el.paymentSection.classList.remove('hidden'));
+      el.unlockBtn.addEventListener('click', function() {
+        try {
+          el.paymentSection.classList.remove('hidden');
+          el.paymentSection.style.display = 'block';
+          el.paymentSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          console.log('unlockBtn clicked, paymentSection shown');
+        } catch(e) { console.error('unlockBtn error:', e); }
+      });
       el.togglePaymentBtn.addEventListener('click', () => {
         state.paymentMocked = !state.paymentMocked;
         el.togglePaymentBtn.textContent = `切换模拟付款状态：${state.paymentMocked ? '已付款' : '未付款'}`;
